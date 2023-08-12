@@ -1,15 +1,15 @@
 
 # Go Scheduler
 
-Package for register scheduler command in your Go project
+Package for register scheduler in your Go project
 
-
+#### THIS PACKAGE IS STILL UNDER DEVELOPMENT AND NOT READY FOR PRODUCTION USE!
 ## Installation
 
 Run command below to install Go Scheduler
 
 ```bash
-  go get github.com/dnridwn/go-scheduler
+go get github.com/dnridwn/go-scheduler
 ```
     
 ## Usage/Examples

@@ -1,7 +1,6 @@
 package goscheduler
 
 import (
-	"context"
 	"errors"
 	"time"
 
@@ -15,7 +14,6 @@ func NewJobId() string {
 
 type Schedule struct {
 	JobId    string
-	ctx      context.Context
 	cronExpr string
 	job      func()
 }
@@ -34,14 +32,13 @@ func NewScheduler() Scheduler {
 	}
 }
 
-func (s *Scheduler) Add(ctx context.Context, cronExpr string, job func()) error {
+func (s *Scheduler) Add(cronExpr string, job func()) error {
 	if !s.gronx.IsValid(cronExpr) {
 		return errors.New("invalid cron expression")
 	}
 
 	s.schedules = append(s.schedules, Schedule{
 		JobId:    NewJobId(),
-		ctx:      ctx,
 		cronExpr: cronExpr,
 		job:      job,
 	})
@@ -55,9 +52,6 @@ func (s *Scheduler) Run() {
 			ticker := time.NewTicker(time.Second)
 			for {
 				select {
-				case <-sch.ctx.Done():
-					s.jobQueue.Stop()
-					return
 				case <-ticker.C:
 					if ok, err := s.gronx.IsDue(sch.cronExpr); ok && err == nil {
 						s.jobQueue.Add(&sch)
@@ -67,5 +61,5 @@ func (s *Scheduler) Run() {
 		}(sch)
 	}
 
-	s.jobQueue.Listen(context.Background())
+	s.jobQueue.Listen()
 }

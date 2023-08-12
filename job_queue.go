@@ -1,7 +1,6 @@
 package goscheduler
 
 import (
-	"context"
 	"runtime"
 )
 
@@ -19,7 +18,7 @@ func (q *JobQueue) Add(job *Schedule) {
 	q.jobs <- *job
 }
 
-func (q *JobQueue) Listen(ctx context.Context) {
+func (q *JobQueue) Listen() {
 	go func() {
 		for job := range q.jobs {
 			job.job()
@@ -27,6 +26,6 @@ func (q *JobQueue) Listen(ctx context.Context) {
 	}()
 }
 
-func (q *JobQueue) Stop() {
+func (q *JobQueue) Clear() {
 	close(q.jobs)
 }

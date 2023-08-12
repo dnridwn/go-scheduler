@@ -1,15 +1,11 @@
 package goscheduler
 
 import (
-	"context"
 	"testing"
 	"time"
 
 	"github.com/stretchr/testify/assert"
 )
-
-// define global context
-var gCtx context.Context = context.Background()
 
 func TestScheduler(t *testing.T) {
 	testCases := []struct {
@@ -39,14 +35,12 @@ func TestScheduler(t *testing.T) {
 				counter++
 			}
 
-			ctx, cancel := context.WithTimeout(gCtx, tc.timeout)
 			scheduler := NewScheduler()
-			scheduler.Add(ctx, tc.cronExp, do)
+			scheduler.Add(tc.cronExp, do)
 			scheduler.Run()
 
-			<-ctx.Done()
-			time.Sleep(10 * time.Millisecond) // add time to wait to make sure
-			cancel()
+			time.Sleep(tc.timeout)
+			time.Sleep(10 * time.Millisecond) // add time to wait for make sure
 
 			assert.Equal(t, tc.expected, counter)
 		})

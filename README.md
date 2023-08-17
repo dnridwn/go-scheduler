@@ -23,11 +23,11 @@ func SchedulerKernel() {
     scheduler := goscheduler.NewScheduler()
     defer scheduler.Run()
 
-    scheduler.Add(context.Background(), "* * * * * *", func() {
+    scheduler.Add("* * * * * *", func() {
         fmt.Println("Run this every second")
     })
 
-    scheduler.Add(context.Background(), "0 0 * * *", func() {
+    scheduler.Add("0 0 * * *", func() {
         fmt.Println("Run this every day at 00:00")
     })
 }
